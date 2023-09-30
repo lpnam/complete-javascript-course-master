@@ -129,7 +129,7 @@ console.log(typeof year);
 
 console.log(typeof null);
 */
-
+/*
 let age = 30;
 age = 26;
 
@@ -144,3 +144,155 @@ job = 'teacher';
 lastName = "Le";
 console.log(lastName);
 console.log(typeof lastName);
+*/
+/*
+//Math operators
+const now = 2037;
+const ageJonas = now - 1991;
+const ageSarra = now - 2018;
+console.log(ageJonas, ageSarra);
+console.log(ageJonas*2, ageSarra/2, 2 ** 3); // 2**3 ~ 2 * 2 * 2
+
+const firstname = "Nam";
+const lastName = "Le";
+console.log(firstname + ' ' + 
+ lastName);
+// Assignment operators
+ let x = 10 + 5;
+ x += 10; // x= x + 10
+ x *= 4;
+ x++; // x= x+1
+ x--; // x= x-1
+ console.log(x);
+ // Comparison operators
+ console.log(ageJonas > ageSarra); // >, <, >=, <=
+ console.log(ageSarra >= 18);
+
+ const isFullAge = ageSarra >= 28;
+ */
+/*
+ const now = 2037;
+ const ageJonas = now - 1991;
+ const ageSarra = now - 2018;
+
+ console.log(now - ageJonas > now - ageSarra);
+ console.log(25 - 10 - 5);
+
+ let x,y;
+ x = y = 25 - 10 - 5;
+ */
+/*
+ const firstName = "Nam";
+ const job = "coder";
+ const birthYear = 1997;
+ const year = 2037;
+
+ const nam = "I'm " + firstName + ", a " + (year - birthYear) + " years old " + job + "!";
+ console.log(nam);
+
+ const namNew = `I'm ${firstName}, a ${year - birthYear} years old ${job}!`;
+ console.log(namNew);
+
+ console.log("String with \n multiple \n line");
+ */
+/*
+const age = 18;
+// const isOldEnough = age >= 18;
+
+if(age >= 18) {
+  console.log("This true 😁");
+} else {
+  console.log("This false 😒");
+}
+*/
+/*
+//type conversion
+const input = '1997';
+console.log(Number(input ) + 18);
+
+console.log(Number("lpnam")); // NaN - Not a Number - Invalid Number
+console.log(typeof NaN);
+
+console.log(String(88));
+
+//type coercion
+
+
+console.log("I'm " + 26); // '+' mean auto to change for String
+
+console.log('10' - '5'); // =5 
+console.log('10' / '5'); // =2
+console.log('10' * '5'); // =50
+// '-', '*', '/' mean auto to change for number
+*/
+/*
+//5 falsy value: 0, '', undefined, null, NaN
+console.log(Boolean(0));
+console.log(Boolean(undefined));
+console.log(Boolean('Xx'));
+console.log(Boolean({}));
+console.log(Boolean(''));
+
+const money = 0;
+if(money){
+  console.log("Don't spend it All!");
+} else {
+  console.log("Get job please!");
+}
+
+let height;
+if(height){
+  console.log("This variables is defined")
+} else {
+  console.log("This variables is undefined")
+}
+*/
+/*
+const age = 18;
+if(age === 18) console.log("Equal");
+
+const value = prompt("What's your favourite number?");
+console.log(value);
+
+if(value == 23){ // loose '23' == 23
+  console.log("This is 23");
+}
+
+if(Number(value) === 23){//strict 23 === 23, not '23'
+  console.log("This is 23 x");
+}
+*/
+/*
+const day = 'monday';
+switch (day) {
+  case 'monday':
+    console.log('monday');
+    break;
+  case 'tuesday':
+    console.log('tuesday');
+    break;
+  case 'tuesday':
+    console.log('tuesday');
+    break;
+  case 'wednesday':
+  case 'thursday':
+    console.log('wednesday and thursday');
+    break; 
+  case 'friday':
+    console.log('friday');
+    break;
+  case 'saturday':
+  case 'sunday':
+    console.log('relax');  
+    break; 
+  default:
+    console.log('not a valid day'); 
+    break;
+}
+*/
+
+const age = 23;
+
+age >= 18 ? console.log('True') : console.log('False');
+
+const result = age >= 18 ? 'True' : 'False';
