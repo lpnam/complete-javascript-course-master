@@ -96,20 +96,21 @@ console.log(nox.includes('A4')); // Return true false
 
 //object
 const info = [
-    'test',
-    'test1',
-    2037-1991,
-    'teacher',
-    ['Michael', 'Paul', 'Henry']
+  "test",
+  "test1",
+  2037 - 1991,
+  "teacher",
+  ["Michael", "Paul", "Henry"],
 ];
 
-const user = { //define new object
-    firstName: 'Jonas',
-    lastName: 'Join',
-    age: 2037-1991,
-    job: 'coder',
-    friends: ['Michael', 'Paul', 'Henry']
-}
+const user = {
+  //define new object
+  firstName: "Jonas",
+  lastName: "Join",
+  age: 2037 - 1991,
+  job: "coder",
+  friends: ["Michael", "Paul", "Henry"],
+};
 /*
 //Retrive data
 console.log(user);
@@ -184,32 +185,31 @@ for(let i=0;i<user3.length ;i++){
 }
 console.log(types);
 */
-const user4 = [ 
-    'Jonas',
-    'Join',
-     2037-1991,
-    'coder',
-    ['Michael', 'Paul', 'Henry']
-]
+const user4 = [
+  "Jonas",
+  "Join",
+  2037 - 1991,
+  "coder",
+  ["Michael", "Paul", "Henry"],
+];
 
-for(let i = user4.length - 1; i >= 0; i--){
-    console.log(user4[i]);
-    if(typeof user4[i] === 'object'){
-        for(let exercise = 0; exercise < user4[i].length; exercise++){
-            console.log(user4[i][exercise]);
-        }
+for (let i = user4.length - 1; i >= 0; i--) {
+  console.log(user4[i]);
+  if (typeof user4[i] === "object") {
+    for (let exercise = 0; exercise < user4[i].length; exercise++) {
+      console.log(user4[i][exercise]);
     }
+  }
 }
 let z = 0;
 
-while(z < user4.length){
-    console.log(user4[z]);
-    z++;
-} 
-
-let dice = Math.trunc(Math.random() * 6) + 1;
-while(dice !== 6){
-    dice = Math.trunc(Math.random() * 6) + 1;
-    console.log(dice);
+while (z < user4.length) {
+  console.log(user4[z]);
+  z++;
 }
 
+let dice = Math.trunc(Math.random() * 6) + 1;
+while (dice !== 6) {
+  dice = Math.trunc(Math.random() * 6) + 1;
+  console.log(dice);
+}
