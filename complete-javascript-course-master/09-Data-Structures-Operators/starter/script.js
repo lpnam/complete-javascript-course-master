@@ -1,8 +1,8 @@
 'use strict';
 
 // Data needed for a later exercise
-const flights =
-  '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
+// const flights =
+//   '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
 const weekday = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 const openingHours = {
   [weekday[3]]: {
@@ -50,6 +50,241 @@ const restaurant = {
   //ES6 enhance
   openingHours,
 };
+const flights =
+  '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
+
+// 🔴 Delayed Departure from FAO to TXL (11h25)
+//              Arrival from BRU to FAO (11h45)
+//   🔴 Delayed Arrival from HEL to FAO (12h05)
+//            Departure from FAO to LIS (12h30)
+const getCode = str => str.slice(0, 3).toUpperCase();
+console.log(flights.split('+'));
+for (const flight of flights.split('+')) {
+  const [type, from, to, time] = flight.split(';');
+  const output = `${type.startsWith('_Delayed') ? '🔴' : ''} ${type.replaceAll(
+    '_',
+    ' '
+  )} from ${getCode(from)} to ${getCode(to)} (${time.replace(
+    ':',
+    'h'
+  )})`.padStart(42);
+  console.log(output);
+}
+
+///////////////////////////////////////
+// Coding Challenge #4
+
+/* 
+Write a program that receives a list of variable names written in 
+underscore_case and convert them to camelCase.
+
+The input will come from a textarea inserted into the DOM (see code below), 
+and conversion will happen when the button is pressed.
+
+THIS TEST DATA (pasted to textarea)
+underscore_case
+ first_name
+Some_Variable 
+  calculate_AGE
+delayed_departure
+Delight_124sdsdf
+
+SHOULD PRODUCE THIS OUTPUT (5 separate console.log outputs)
+underscoreCase      ✅
+firstName           ✅✅
+someVariable        ✅✅✅
+calculateAge        ✅✅✅✅
+delayedDeparture    ✅✅✅✅✅
+
+HINT 1: Remember which character defines a new line in the textarea 😉
+HINT 2: The solution only needs to work for a variable made out of 2 words, like a_b
+HINT 3: Start without worrying about the ✅. Tackle that only after you have the variable name conversion working 😉
+HINT 4: This challenge is difficult on purpose, so start watching the solution in case you're stuck. Then pause and continue!
+
+Afterwards, test with your own test data!
+
+GOOD LUCK 😀
+*/
+document.body.append(document.createElement('textarea'));
+document.body.append(document.createElement('button'));
+const text = document.querySelector('textarea');
+
+//////My way
+// document.querySelector('textarea').classList.add('texthere');
+// const text1 = document.querySelector('.texthere');
+
+// text1.addEventListener('input', function (e) {
+//   text1.value = e.target.value;
+// });
+
+// document.querySelector('button').addEventListener('click', function () {
+//   const produces = text1.value.toLowerCase().split(' ' | '\n');
+//   const finalProduces = [];
+//   for (let produce of produces) {
+//     let z = produce.replace(/ /g, '');
+//     let z_index = z.indexOf('_');
+//     while (z_index > 0) {
+//       z = z.replace(`_${z[z_index + 1]}`, z[z_index + 1].toUpperCase());
+//       finalProduces.push(z);
+//       z_index = z.indexOf('_');
+//     }
+//     console.log(z);
+//   }
+// });
+///////////////
+/////////////Course
+// document.querySelector('button').addEventListener('click', function () {
+//   const text = document.querySelector('textarea').value;
+//   const rows = text.split('\n');
+
+//   for (const [i, row] of rows.entries()) {
+//     const [first, second] = row.toLowerCase().trim().split('_');
+
+//     const output = `${first}${second.replace(
+//       second[0],
+//       second[0].toUpperCase()
+//     )}`;
+//     console.log(`${output.padEnd(20)}${'✅'.repeat(i + 1)}`);
+//   }
+// });
+///////////////////
+/////////////////////////Work with String//////////////////
+/*
+/////P1...................
+const airline = 'TAP Air Portugal';
+const plane = 'A320';
+
+console.log(plane[0]);
+console.log(plane[1]);
+console.log(plane[2]);
+console.log(plane[3]);
+console.log('B345');
+console.log(plane.length);
+console.log('B345'.length);
+
+console.log(airline.indexOf('A'));
+console.log(airline.lastIndexOf('A'));
+console.log(airline.indexOf('a'));
+
+console.log(airline.slice(4)); //Start of index
+console.log(airline.slice(4, 7)); //Start and End ( [Start, End) ) of index
+console.log(airline.slice(0, airline.indexOf(' ')));
+console.log(airline.slice(airline.lastIndexOf(' ') + 1));
+console.log(airline.slice(-2));
+console.log(airline.slice(1, -2));
+
+const checkMiddleSeat = function (seat) {
+  //B and E are middle seat
+  const s = seat.slice(-1);
+  if (s === 'B' || s === 'E') console.log('You have middle seat');
+  else console.log('You got lucky ::::');
+};
+
+checkMiddleSeat('11B');
+checkMiddleSeat('23C');
+checkMiddleSeat('3E');
+
+/////P2...................
+console.log('P22222222222222222');
+console.log(airline.toUpperCase());
+console.log(airline.toLowerCase());
+//Fix capitalization in name
+const passenger = 'jOnAS';
+const passenger_low = passenger.toLowerCase();
+const passenger_True = passenger_low[0].toUpperCase() + passenger_low.slice(1);
+console.log(passenger_True);
+//Check Email example - Comparing Email
+const email = 'hello@jonas.io';
+const loginEmail = ' Hello@Jonas.Io \n';
+//**Long way
+const lowerEmail = loginEmail.toLowerCase();
+console.log(lowerEmail);
+const trimmedEmail = lowerEmail.trim();
+console.log(trimmedEmail);
+//**Short Way
+const normalizeEmail = loginEmail.toLowerCase().trim();
+console.log(normalizeEmail);
+
+console.log(normalizeEmail === email);
+//Replacing
+const priceGB = '278,97%';
+const priceUS = priceGB.replace('%', '$').replace(',', '.');
+console.log(priceUS);
+
+const announcement = 'All passengers come to here then go here!';
+// console.log(announcement.replace('here', 'next door'));
+console.log(announcement.replace(/here/g, 'next door'));
+
+// Booleans method
+const plane_z = 'A230neo';
+console.log(plane_z.includes('A230'));
+console.log(plane_z.includes('A230nes'));
+console.log(plane_z.startsWith('A23'));
+console.log(plane_z.startsWith('23'));
+
+if (plane_z.startsWith('A23') && plane_z.endsWith('neo')) {
+  console.log('TRUE HERE');
+}
+
+if (plane_z.startsWith('A23') && plane_z.endsWith('neos')) {
+  console.log('FALSE HERE');
+}
+
+//Practice
+
+const checkBaggage = function (items) {
+  const baggage = items.toLowerCase();
+  if (baggage.includes('knife') || baggage.includes('gun'))
+    console.log('NOT allow on board');
+  else console.log('WELCOME');
+};
+checkBaggage('I have a laptop, some Food and pocket Knife');
+checkBaggage('Socks and camera');
+checkBaggage('Got some snacks and gun for protection');
+/////P3...................
+//Split
+console.log('a+very+nice+string'.split('+'));
+console.log('Le Phuong Nam'.split(' '));
+
+const [firstName, lastName] = 'Nam Le'.split(' ');
+console.log(firstName, lastName);
+
+const newName = ['Mr.', firstName, lastName.toUpperCase()].join(' ');
+console.log(newName);
+
+const getPassengerName = function (items) {
+  const names = items.split(' ');
+  const finalNames = [];
+  for (const name of names) {
+    // finalNames.push(name[0].toUpperCase() + name.slice(1));
+    finalNames.push(name.replace(name[0], name[0].toUpperCase()));
+  }
+  console.log(finalNames);
+};
+const passenger_y = 'jessica ann smith davis';
+getPassengerName(passenger_y);
+//Padding string
+const message_new = 'Go to gate 23!';
+console.log(message_new.padStart(25, '+').padEnd(35, '+'));
+console.log('HAHA'.padStart(25, '+'));
+
+const maskCreditCard = function (number) {
+  const str = number + '';
+  const last = str.slice(-4);
+  return last.padStart(str.length, '*');
+};
+console.log(maskCreditCard(234234345));
+console.log(maskCreditCard('235345567'));
+
+// Repeat
+const message_aa = 'Bad weather... All Departues Delays... ';
+console.log(message_aa.repeat(5));
+
+const planesInLine = function (n) {
+  console.log(`There are ${n} planes in line ${' zXz '.repeat(n)}`);
+};
+planesInLine(3);
+*/
 ///////////////////////////////////////
 // Coding Challenge #3
 
@@ -74,7 +309,7 @@ marking whether it's in the first half or second half
 
 GOOD LUCK 😀
 */
-
+/*
 const gameEvents = new Map([
   [17, '⚽️ GOAL'],
   [36, '🔁 Substitution'],
@@ -108,6 +343,8 @@ for (const [time, event] of gameEvents) {
   const half = time <= 45 ? 'FIRST' : 'SECOND';
   console.log(`[${half} HALF] ${time}: ${event}`);
 }
+*/
+
 /*
 ////////////////////MAP///////////////////////////////
 const rest = new Map();
