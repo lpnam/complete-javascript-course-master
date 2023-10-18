@@ -74,3 +74,40 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+let arr = ['a', 'b', 'c', 'd', 'e'];
+//SLICE
+console.log(arr.slice(2));
+console.log(arr.slice(2, 4));
+console.log(arr.slice(-2));
+console.log(arr.slice(-1));
+console.log(arr.slice(1, -2));
+console.log(arr.slice());
+console.log([...arr]);
+//SPLICE
+console.log('SPLICE');
+// console.log(arr.splice(2));
+// console.log(arr);
+arr.splice(-1);
+console.log(arr);
+arr.splice(1, 2);
+console.log(arr);
+//REVERSE
+arr = ['a', 'b', 'c', 'd', 'e'];
+let arr2 = ['f', 'i', 'h', 'g', 'j'];
+console.log(arr2.reverse());
+console.log(arr2);
+//CONCAT
+const letters = arr.concat(arr2);
+console.log(letters);
+//JOIN
+console.log(letters.join('-'));
+//AT()
+const arr3 = [23, 11, 64];
+console.log(arr3[0]);
+console.log(arr3.at(0));
+//getting last array element
+console.log(arr3[arr3.length - 1]);
+console.log(arr3.slice(-1)[0]); //Don't know length
+console.log(arr3.at(-1));
+console.log('lpnam'.at(0));
+console.log('lpnam'.at(-1));
