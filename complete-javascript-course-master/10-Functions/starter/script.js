@@ -246,7 +246,7 @@ poll.displayResults.call({ answers: [5, 2, 3] }, 'string');
 */
 
 //Immediately invoke function expresstions
-
+/*
 const runOnce = function () {
   console.log('this should only run once0');
 };
@@ -257,3 +257,86 @@ runOnce();
 })();
 
 (() => console.log('this should only run once2'))();
+*/
+/*
+//Closures
+const secureBooking = function () {
+  let passengerCount = 0;
+  let b = 0;
+  return function () {
+    let a = 0;
+    passengerCount++;
+    return function () {
+      passengerCount++;
+      a++;
+      b++;
+      console.log(passengerCount, a, b);
+    };
+  };
+};
+const booker1 = secureBooking();
+const booker2 = booker1();
+booker2();
+booker2();
+console.dir(booker2);
+//Closures Example
+
+let f;
+const g = function () {
+  const k = 23;
+  f = function () {
+    console.log(k * 2);
+  };
+};
+const h = function () {
+  const z = 777;
+  f = function () {
+    console.log(z * 2);
+  };
+};
+g();
+f();
+//Re-assign
+h();
+f();
+console.dir(f);
+
+const boardPassengers = function (n, wait) {
+  const perGroup = n / 3;
+
+  setTimeout(function () {
+    console.log(`Boarding all ${n} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000);
+
+  console.log(`Start in ${wait} seconds`);
+};
+
+const perGroup = 1000;
+boardPassengers(180, 3);
+*/
+// Coding Challenge #2
+
+/* 
+This is more of a thinking challenge than a coding challenge 🤓
+
+Take the IIFE below and at the end of the function, 
+attach an event listener that changes the color of the selected 
+h1 element ('header') to blue, each time the BODY element is clicked. 
+Do NOT select the h1 element again!
+
+And now explain to YOURSELF (or someone around you) 
+WHY this worked! Take all the time you need. 
+Think about WHEN exactly the callback function is executed, 
+and what that means for the variables involved in this example.
+
+GOOD LUCK 😀
+*/
+//
+(function () {
+  const header = document.querySelector('h1');
+  header.style.color = 'red';
+  document.querySelector('body').addEventListener('click', function () {
+    header.style.color = 'blue';
+  });
+})();
