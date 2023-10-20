@@ -77,8 +77,78 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-displayMovements(account1.movements);
 
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, item) => acc + item, 0);
+  labelBalance.textContent = `${balance}€`;
+};
+
+// const totalDepositUSD = movements
+//   .filter(mov => mov > 0)
+//   .map(mov => mov * eurToUsd)
+//   .reduce((acc, mov) => acc + mov, 0);
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov);
+  labelSumIn.textContent = `${incomes}€`;
+
+  const out = acc.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  const interest = acc.movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * acc.interestRate) / 100)
+    .filter((int, _, arr) => {
+      console.log(arr);
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}€`;
+};
+
+const createUsernames = function (accs) {
+  accs.forEach(acc => {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(item => item[0])
+      .join('');
+  });
+};
+createUsernames(accounts);
+//Event handler
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+
+    //Clear display infor login
+    inputLoginUsername.value = '';
+    inputLoginPin.value = '';
+    inputLoginPin.blur();
+
+    //Display movements
+    displayMovements(currentAccount.movements);
+    //Display balance
+    calcDisplayBalance(currentAccount.movements);
+    //Display summary
+    calcDisplaySummary(currentAccount);
+  }
+});
 // Coding Challenge #1
 
 /* 
@@ -109,6 +179,7 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
 */
+/*
 const julia_data = [3, 5, 2, 12, 7];
 const kate_data = [4, 1, 15, 8, 3];
 
@@ -128,6 +199,42 @@ const checkDogs = function (dogsJulia, dogsKate) {
 };
 
 checkDogs(julia_data, kate_data);
+*/
+///////////////////////////////////////
+// Coding Challenge #2
+
+/* 
+Let's go back to Julia and Kate's study about dogs. 
+This time, they want to convert dog ages to human ages and calculate the average age 
+of the dogs in their study.
+
+Create a function 'calcAverageHumanAge', which accepts an arrays of dog's ages ('ages'),
+and does the following things in order:
+
+1. Calculate the dog age in human years using the following formula: 
+if the dog is <= 2 years old, humanAge = 2 * dogAge. 
+If the dog is > 2 years old, humanAge = 16 + dogAge * 4.
+2. Exclude all dogs that are less than 18 human years old 
+(which is the same as keeping dogs that are at least 18 years old)
+3. Calculate the average human age of all adult dogs 
+(you should already know from other challenges how we calculate averages 😉)
+4. Run the function for both test datasets
+
+TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
+TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+/*
+const calcAverageHumanAge = function (ages) {
+  const adultDogs = ages
+    .map(dogAge => (dogAge <= 2 ? 2 * dogAge : 16 + dogAge * 4))
+    .filter(item => item >= 18)
+    .reduce((sumAge, dogAge, _, arr) => sumAge + dogAge / arr.length, 0);
+  console.log(adultDogs);
+};
+calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
+*/
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -211,3 +318,58 @@ currenciesUnique.forEach((value, _, map) => {
   console.log(`${value}: ${value}`);
 });
 */
+/*
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const movementUS = movements.map(item => item * 1.1);
+console.log(movementUS);
+const movDecription = movements.map((mov, i, arr) => {
+  return `At ${i + 1}: ${mov > 0 ? 'Deposited' : 'WithDrawal'} ${Math.abs(
+    mov
+  )}`;
+  // if (mov > 0) {
+  //   return `At ${i + 1}: ${mov} > 0`;
+  // } else return `At ${i + 1}: ${Math.abs(mov)}`;
+});
+console.log(movDecription);
+*/
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const deposits = movements.filter(item => item > 0);
+const withdrawal = movements.filter(item => item < 0);
+console.log(deposits);
+console.log(withdrawal);
+
+///////REduce
+const balance = movements.reduce((acc, item, index, array) => {
+  console.log(`Iteration ${index}: ${acc}`);
+  return acc + item;
+}, 10);
+
+const maxMovementsValue = movements.reduce((maxValue, item) => {
+  if (item > maxValue) maxValue = item;
+  return maxValue;
+});
+const minMovementsValue = movements.reduce((minValue, item) => {
+  if (item < minValue) minValue = item;
+  return minValue;
+});
+console.log(`Max movements value is: ${maxMovementsValue}`);
+console.log(`Min movements value is: ${minMovementsValue}`);
+
+const eurToUsd = 1.1;
+const totalDepositUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * eurToUsd)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(totalDepositUSD);
+
+const firstWithdrawal = movements.find(mov => mov < 0);
+console.log(firstWithdrawal);
+console.log(accounts);
+const account_z = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account_z);
+
+for (const x of accounts) {
+  if (x.owner === 'Jessica Davis') console.log(x);
+}
+
+console.log(accounts.filter(acc => acc.owner === 'Jessica Davis'));
