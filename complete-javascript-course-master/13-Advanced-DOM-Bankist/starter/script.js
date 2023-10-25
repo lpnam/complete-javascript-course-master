@@ -9,6 +9,10 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+const nav = document.querySelector('.nav');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -86,6 +90,48 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   }
 });
 
+//Tabbed component
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+  if (!clicked) return;
+  tabs.forEach(tab => tab.classList.remove('operations__tab--active'));
+  clicked.classList.add('operations__tab--active');
+
+  //Activate content area but we need remove first
+  tabsContent.forEach(t => t.classList.remove('operations__content--active'));
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+//Menu fade animation
+//Passing argument into handle
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+
+nav.addEventListener('mouseout', handleHover.bind(1));
+
+//Sticky navigation
+const initialCoords = section1.getBoundingClientRect();
+console.log(initialCoords);
+window.addEventListener('scroll', function () {
+  console.log(window.scrollY);
+  if (this.window.scrollY > initialCoords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
 ////////////////////////////////////////////////////////////
 /*
 //Selecting elements
@@ -231,5 +277,34 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 document.querySelector('.nav').addEventListener('click', function (e) {
   this.style.backgroundColor = randomColor();
   console.log('NAV', e.target, e.currentTarget);
+});
+*/
+/*
+const hh1 = document.querySelector('h1');
+
+// Going downwards: child
+console.log(hh1.querySelectorAll('.highlight'));
+console.log(hh1.childNodes);
+console.log(hh1.children);
+hh1.firstElementChild.computedStyleMap.color = 'white';
+hh1.lastElementChild.computedStyleMap.color = 'black';
+
+//Going upwards: parents
+console.log(hh1.parentNode);
+console.log(hh1.parentElement);
+
+hh1.closest('.header').style.background = 'var(--gradient-secondary)';
+hh1.closest('h1').style.background = 'var(--gradient-primary)';
+
+//Going sideways: siblings
+console.log(hh1.previousElementSibling);
+console.log(hh1.nextElementSibling);
+
+console.log(hh1.previousSibling);
+console.log(hh1.nextSibling);
+
+console.log(hh1.parentElement.children);
+[...hh1.parentElement.children].forEach(function (el) {
+  if (el !== hh1) el.style.transform = 'scale(0.5)';
 });
 */
