@@ -303,3 +303,129 @@ console.log(mike instanceof Object);
 Student.prototype.constructor = Student;
 
 console.dir(Student.prototype.constructor);*/
+///////////////////////////////////
+
+//1.Public fields
+//2.Private fields
+//3.Public methods
+//4.Private methods
+class Account {
+  //1.Public fields (define on instances)
+  locale = navigator.language;
+
+  //2.Private fields
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+
+    //Protected property
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thank for opening an account, ${this.owner}`);
+  }
+
+  //3.Public methods
+  //Public interface
+
+  getMoments() {
+    return this.#movements;
+  }
+  deposit(val) {
+    this.#movements.push(val);
+    return this;
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+    return this;
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log('Loan approve');
+    }
+    return this;
+  }
+
+  static helper() {
+    console.log('Helper');
+  }
+  //4.Private methods
+  #approveLoan(value) {
+    return true;
+  }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+
+acc1.deposit(250);
+acc1.withdraw(140);
+acc1.requestLoan(1000);
+// acc1.#approveLoan(1000);
+console.log(acc1.getMoments());
+
+console.log(acc1);
+// console.log(acc1.#movements);
+Account.helper(); // static call
+
+//////////////////CHAINING
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+console.log(acc1.getMoments());
+//////////////////////////Coding challenge 4
+
+class ES6_CarF {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`Increase: Current speed is: ${this.speed} km/h`);
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`Decrease: Current speed is: ${this.speed} km/h`);
+  }
+
+  get speedUS() {
+    return `Get: Current speed is: ${this.speed / 1.6} mi/h`;
+  }
+
+  set speedUS(speed_mih) {
+    this.speed = speed_mih * 1.6;
+    console.log(`Set: Current speed is: ${speed_mih} mi/h`);
+  }
+}
+class EVCl extends ES6_CarF {
+  #charge;
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge--;
+    console.log(`Increase: Current speed is: ${this.speed} km/h`);
+    return this;
+  }
+
+  chargeBattery(val) {
+    this.#charge = val;
+    return this;
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`Decrease: Current speed is: ${this.speed} km/h`);
+    return this;
+  }
+}
