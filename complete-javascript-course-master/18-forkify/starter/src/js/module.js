@@ -1,5 +1,5 @@
 import { async } from 'regenerator-runtime';
-import { API_URL } from './config';
+import { API_URL, RESULT_PER_PAGE } from './config';
 import { getJSON } from './views/helper';
 
 export const state = {
@@ -7,6 +7,11 @@ export const state = {
   search: {
     query: '',
     result: [],
+    resultsPerPage: RESULT_PER_PAGE,
+  },
+  pagination: {
+    maxPage: 0,
+    curPage: 1,
   },
 };
 
@@ -44,7 +49,19 @@ export const loadSearchResult = async function (query) {
         image: rec.image_url,
       };
     });
+    state.pagination.maxPage = getMaxPageNumber();
   } catch (error) {
     throw error;
   }
 };
+
+export const getSearchResultsPage = function (page = state.pagination.curPage) {
+  const start = (page - 1) * state.search.resultsPerPage;
+  const end = page * state.search.resultsPerPage;
+  return state.search.result.slice(start, end);
+};
+
+const getMaxPageNumber = () =>
+  Math.ceil(state.search.result.length / state.search.resultsPerPage);
+export const increasePage = () => state.pagination.curPage++;
+export const decreasePage = () => state.pagination.curPage--;
