@@ -78,13 +78,20 @@ const paginationPrevPage = function () {
   );
 };
 
+const controlServings = function (newServings) {
+  // Update the recipe serving (in state)
+  model.updateServings(newServings);
+  // Update the recipe view
+  recipeView.render(model.state.recipe);
+};
+
 // showRecipe();
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResult);
   paginationView.addHandlerClick([paginationPrevPage, paginationNextPage]);
 };
-
 init();
 // window.addEventListener('hashchange', showRecipe);
 // window.addEventListener('load', showRecipe);

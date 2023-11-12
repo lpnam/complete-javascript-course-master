@@ -641,9 +641,16 @@ const paginationPrevPage = function() {
     (0, _paginationViewJsDefault.default).render(_moduleJs.state.pagination);
     (0, _resultsViewJsDefault.default).render(_moduleJs.getSearchResultsPage(_moduleJs.state.pagination.curPage));
 };
+const controlServings = function(newServings) {
+    // Update the recipe serving (in state)
+    _moduleJs.updateServings(newServings);
+    // Update the recipe view
+    (0, _recipeViewJsDefault.default).render(_moduleJs.state.recipe);
+};
 // showRecipe();
 const init = function() {
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
+    (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResult);
     (0, _paginationViewJsDefault.default).addHandlerClick([
         paginationPrevPage,
@@ -2520,6 +2527,7 @@ parcelHelpers.export(exports, "loadSearchResult", ()=>loadSearchResult);
 parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
 parcelHelpers.export(exports, "increasePage", ()=>increasePage);
 parcelHelpers.export(exports, "decreasePage", ()=>decreasePage);
+parcelHelpers.export(exports, "updateServings", ()=>updateServings);
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
 var _helper = require("./views/helper");
@@ -2580,6 +2588,12 @@ const getSearchResultsPage = function(page = state.pagination.curPage) {
 const getMaxPageNumber = ()=>Math.ceil(state.search.result.length / state.search.resultsPerPage);
 const increasePage = ()=>state.pagination.curPage++;
 const decreasePage = ()=>state.pagination.curPage--;
+const updateServings = function(newServings) {
+    state.recipe.ingredients.forEach((ing)=>{
+        ing.quantity = ing.quantity * newServings / state.recipe.serving;
+    });
+    state.recipe.serving = newServings;
+};
 
 },{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","./views/helper":"eA19p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"k5Hzs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -2630,6 +2644,14 @@ class RecipeView extends (0, _viewDefault.default) {
     _parentEl = document.querySelector(".recipe");
     _errorMessage = "We could not find that recipe. Please try another one!";
     _message;
+    addHandlerUpdateServings(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--update-servings");
+            if (!btn) return;
+            const { updateTo } = btn.dataset;
+            if (+updateTo > 0) handler(+updateTo);
+        });
+    }
     _generateMarkup() {
         return `
     <figure class="recipe__fig">
@@ -2655,12 +2677,12 @@ class RecipeView extends (0, _viewDefault.default) {
         <span class="recipe__info-text">servings</span>
 
         <div class="recipe__info-buttons">
-          <button class="btn--tiny btn--increase-servings">
+          <button class="btn--tiny btn--update-servings" data-update-to="${this._data.serving - 1}">
             <svg>
               <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
             </svg>
           </button>
-          <button class="btn--tiny btn--increase-servings">
+          <button class="btn--tiny btn--update-servings" data-update-to="${this._data.serving + 1}">
             <svg>
               <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
             </svg>

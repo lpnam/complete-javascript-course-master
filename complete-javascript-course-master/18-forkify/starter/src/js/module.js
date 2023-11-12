@@ -65,3 +65,11 @@ const getMaxPageNumber = () =>
   Math.ceil(state.search.result.length / state.search.resultsPerPage);
 export const increasePage = () => state.pagination.curPage++;
 export const decreasePage = () => state.pagination.curPage--;
+
+export const updateServings = function (newServings) {
+  state.recipe.ingredients.forEach(ing => {
+    ing.quantity = (ing.quantity * newServings) / state.recipe.serving;
+  });
+
+  state.recipe.serving = newServings;
+};
