@@ -599,6 +599,8 @@ const controlRecipes = async function() {
         const id = window.location.hash.slice(1);
         if (!id) return;
         (0, _recipeViewJsDefault.default).renderSpinner();
+        //0. Update results view to mark selected search result
+        (0, _resultsViewJsDefault.default).update(_moduleJs.getSearchResultsPage());
         // 1. Loading recipe
         await _moduleJs.loadRecipe(id);
         //2. Reder recipe
@@ -645,12 +647,19 @@ const controlServings = function(newServings) {
     // Update the recipe serving (in state)
     _moduleJs.updateServings(newServings);
     // Update the recipe view
-    (0, _recipeViewJsDefault.default).render(_moduleJs.state.recipe);
+    // recipeView.render(model.state.recipe);
+    (0, _recipeViewJsDefault.default).update(_moduleJs.state.recipe);
+};
+const controlAddBookmark = function() {
+    if (!_moduleJs.state.recipe.bookmarked) _moduleJs.addBookmark(_moduleJs.state.recipe);
+    else _moduleJs.deleteBookmark(_moduleJs.state.recipe.id);
+    (0, _recipeViewJsDefault.default).update(_moduleJs.state.recipe);
 };
 // showRecipe();
 const init = function() {
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
+    (0, _recipeViewJsDefault.default).addHandlerAddBookmark(controlAddBookmark);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResult);
     (0, _paginationViewJsDefault.default).addHandlerClick([
         paginationPrevPage,
@@ -2528,6 +2537,8 @@ parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
 parcelHelpers.export(exports, "increasePage", ()=>increasePage);
 parcelHelpers.export(exports, "decreasePage", ()=>decreasePage);
 parcelHelpers.export(exports, "updateServings", ()=>updateServings);
+parcelHelpers.export(exports, "addBookmark", ()=>addBookmark);
+parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark);
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
 var _helper = require("./views/helper");
@@ -2541,7 +2552,8 @@ const state = {
     pagination: {
         maxPage: 0,
         curPage: 1
-    }
+    },
+    bookmarks: []
 };
 const loadRecipe = async function(id) {
     try {
@@ -2557,6 +2569,8 @@ const loadRecipe = async function(id) {
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
+        if (state.bookmarks.some((bookmark)=>bookmark.id === id)) state.recipe.bookmarked = true;
+        else state.recipe.bookmarked = false;
     // console.log(state.recipe);
     } catch (error) {
         throw error;
@@ -2576,6 +2590,7 @@ const loadSearchResult = async function(query) {
             };
         });
         state.pagination.maxPage = getMaxPageNumber();
+        state.pagination.curPage = 1;
     } catch (error) {
         throw error;
     }
@@ -2593,6 +2608,19 @@ const updateServings = function(newServings) {
         ing.quantity = ing.quantity * newServings / state.recipe.serving;
     });
     state.recipe.serving = newServings;
+};
+const addBookmark = function(recipe) {
+    //Add bookmark
+    state.bookmarks.push(recipe);
+    //Mark current recipe as bookmark
+    if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+};
+const deleteBookmark = function(id) {
+    //Delete bookmark
+    const index = state.bookmarks.findIndex((el)=>el.id === id);
+    state.bookmarks.splice(index, 1);
+    //mark current recipe as NOT bookmarked
+    if (id === state.recipe.id) state.recipe.bookmarked = false;
 };
 
 },{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","./views/helper":"eA19p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"k5Hzs":[function(require,module,exports) {
@@ -2652,6 +2680,13 @@ class RecipeView extends (0, _viewDefault.default) {
             if (+updateTo > 0) handler(+updateTo);
         });
     }
+    addHandlerAddBookmark(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--bookmark");
+            if (!btn) return;
+            handler();
+        });
+    }
     _generateMarkup() {
         return `
     <figure class="recipe__fig">
@@ -2692,9 +2727,9 @@ class RecipeView extends (0, _viewDefault.default) {
 
       <div class="recipe__user-generated"></div>
 
-      <button class="btn--round">
+      <button class="btn--round btn--bookmark">
         <svg class="">
-          <use href="${0, _iconsSvgDefault.default}#icon-bookmark-fill"></use>
+          <use href="${0, _iconsSvgDefault.default}#icon-bookmark${this._data.bookmarked ? "-fill" : ""}"></use>
         </svg>
       </button>
     </div>
@@ -2759,6 +2794,21 @@ class View {
         const markup = this._generateMarkup();
         this._clear();
         this._parentEl.insertAdjacentHTML("afterbegin", markup);
+    }
+    update(data) {
+        this._data = data;
+        const newMarkup = this._generateMarkup();
+        // convert string to DOM object
+        const newDOM = document.createRange().createContextualFragment(newMarkup);
+        const newElements = Array.from(newDOM.querySelectorAll("*"));
+        const curElements = Array.from(this._parentEl.querySelectorAll("*"));
+        newElements.forEach((newEl, i)=>{
+            const curEl = curElements[i];
+            //Update change text
+            if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== "") curEl.textContent = newEl.textContent;
+            //Update change attribute
+            if (!newEl.isEqualNode(curEl)) Array.from(newEl.attributes).forEach((attr)=>curEl.setAttribute(attr.name, attr.value));
+        });
     }
     addHandlerRender(handler) {
         [
@@ -3138,9 +3188,11 @@ class ResultsView extends (0, _viewDefault.default) {
         return this._data.map((dt)=>this._generateMarkupPreview(dt)).join("");
     }
     _generateMarkupPreview(result) {
+        console.log(result);
+        const id = window.location.hash.slice(1);
         return `
         <li class="preview">
-            <a class="preview__link preview__link" href="#${result.id}">
+            <a class="preview__link ${result.id === id ? "preview__link--active" : ""}" href="#${result.id}">
                 <figure class="preview__fig">
                     <img src="${result.image}" alt="${result.title}" />
                 </figure>
