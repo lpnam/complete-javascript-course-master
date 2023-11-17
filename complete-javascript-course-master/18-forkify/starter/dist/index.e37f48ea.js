@@ -3403,6 +3403,13 @@ class PaginationView extends (0, _viewDefault.default) {
     </button>
     `;
     }
+    _generateMidbtn(page) {
+        return `
+    <button data-goto="next" class="btn--inline pagination__btn--mid">
+        <span>${page}</span>
+    </button>
+    `;
+    }
     _generatePrevbtn(page) {
         return `
     <button data-goto="prev" class="btn--inline pagination__btn--prev">
@@ -3413,14 +3420,33 @@ class PaginationView extends (0, _viewDefault.default) {
     </button>
     `;
     }
+    _generateHiddenbtn() {
+        return `
+    <button data-goto="next" class="btn--inline hidden">
+        <span>Page x</span>
+        <svg class="search__icon">
+            <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
+        </svg>
+    </button>
+    `;
+    }
     _generateMarkup() {
         if (this._data.maxPage <= 1) return "";
-        if (this._data.curPage === 1) return this._generateNextbtn(this._data.curPage + 1);
-        if (this._data.curPage === this._data.maxPage) return this._generatePrevbtn(this._data.curPage - 1);
-        else return `
-        ${this._generatePrevbtn(this._data.curPage - 1)}
+        if (this._data.curPage === 1) return `
+        ${this._generateHiddenbtn()}
+        ${this._generateMidbtn(this._data.curPage)}
         ${this._generateNextbtn(this._data.curPage + 1)}
-        `;
+      `;
+        if (this._data.curPage === this._data.maxPage) return `
+        ${this._generatePrevbtn(this._data.curPage - 1)}
+        ${this._generateMidbtn(this._data.curPage)}
+        ${this._generateHiddenbtn()}
+      `;
+        else return `
+      ${this._generatePrevbtn(this._data.curPage - 1)}
+      ${this._generateMidbtn(this._data.curPage)}
+      ${this._generateNextbtn(this._data.curPage + 1)}
+    `;
     }
 }
 exports.default = new PaginationView();

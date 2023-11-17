@@ -499,6 +499,7 @@ body {
 .pagination {
   margin-top: auto;
   padding: 0 3.5rem;
+  display: flex;
 }
 
 .pagination:after {
@@ -508,11 +509,17 @@ body {
 }
 
 .pagination__btn--prev {
-  float: left;
+  float: inline-start;
 }
 
 .pagination__btn--next {
-  float: right;
+  float: inline-end;
+}
+
+.pagination__btn--mid {
+  text-align: center;
+  cursor: default;
+  margin: auto;
 }
 
 .copyright {

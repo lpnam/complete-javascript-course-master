@@ -31,6 +31,15 @@ class PaginationView extends View {
     </button>
     `;
   }
+
+  _generateMidbtn(page) {
+    return `
+    <button data-goto="next" class="btn--inline pagination__btn--mid">
+        <span>${page}</span>
+    </button>
+    `;
+  }
+
   _generatePrevbtn(page) {
     return `
     <button data-goto="prev" class="btn--inline pagination__btn--prev">
@@ -42,20 +51,41 @@ class PaginationView extends View {
     `;
   }
 
+  _generateHiddenbtn() {
+    return `
+    <button data-goto="next" class="btn--inline hidden">
+        <span>Page x</span>
+        <svg class="search__icon">
+            <use href="${icons}#icon-arrow-left"></use>
+        </svg>
+    </button>
+    `;
+  }
+
   _generateMarkup() {
     if (this._data.maxPage <= 1) {
       return '';
     }
+
     if (this._data.curPage === 1) {
-      return this._generateNextbtn(this._data.curPage + 1);
+      return `
+        ${this._generateHiddenbtn()}
+        ${this._generateMidbtn(this._data.curPage)}
+        ${this._generateNextbtn(this._data.curPage + 1)}
+      `;
     }
     if (this._data.curPage === this._data.maxPage) {
-      return this._generatePrevbtn(this._data.curPage - 1);
-    } else {
       return `
         ${this._generatePrevbtn(this._data.curPage - 1)}
-        ${this._generateNextbtn(this._data.curPage + 1)}
-        `;
+        ${this._generateMidbtn(this._data.curPage)}
+        ${this._generateHiddenbtn()}
+      `;
+    } else {
+      return `
+      ${this._generatePrevbtn(this._data.curPage - 1)}
+      ${this._generateMidbtn(this._data.curPage)}
+      ${this._generateNextbtn(this._data.curPage + 1)}
+    `;
     }
   }
 }

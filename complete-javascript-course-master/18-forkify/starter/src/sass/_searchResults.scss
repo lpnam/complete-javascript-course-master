@@ -18,13 +18,23 @@
     display: table;
     clear: both;
   }
+  display: flex;
 
   &__btn {
     &--prev {
-      float: left;
+      // justify-content: space-between;
+      // margin: auto;
+      float: inline-start;
     }
     &--next {
-      float: right;
+      // justify-content: space-between;
+      // margin: auto;
+      float: inline-end;
+    }
+    &--mid {
+      text-align: center;
+      margin: auto;
+      cursor: default;
     }
   }
 }
